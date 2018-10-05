@@ -25,10 +25,23 @@ export default class Counter extends Component {
 
   componentDidMount() {
     this.startTime = Date.now();
+    this.umount = false
+    requestAnimationFrame(this.animate.bind(this));
+  }
+
+  componentWillUnmount() {
+    this.umount = true
+  }
+
+  reset() {
+    this.startTime = Date.now();
+    this.stop = false
     requestAnimationFrame(this.animate.bind(this));
   }
 
   animate() {
+    if (this.umount) return;
+
     const { onComplete } = this.props;
 
     if (this.stop) {
