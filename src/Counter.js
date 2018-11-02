@@ -24,19 +24,32 @@ export default class Counter extends Component {
   state = { value: this.props.start };
 
   componentDidMount() {
-    this.startTime = Date.now();
     this.umount = false
-    requestAnimationFrame(this.animate.bind(this));
+    this.resetAnimation()
   }
 
   componentWillUnmount() {
     this.umount = true
+    cancelAnimationFrame(this.frameAnimationRequest)
+  }
+
+  resetAnimation() {
+    if (this.frameAnimationRequest) {
+      cancelAnimationFrame(this.frameAnimationRequest)
+    }
+    this.stop = false
+    this.startTime = Date.now()
+    this.frameAnimationRequest = requestAnimationFrame(this.animate.bind(this))
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.end !== prevProps.end) {
+      this.draw()
+    }
   }
 
   reset() {
-    this.startTime = Date.now();
-    this.stop = false
-    requestAnimationFrame(this.animate.bind(this));
+    this.resetAnimation();
   }
 
   animate() {
@@ -49,7 +62,7 @@ export default class Counter extends Component {
       return;
     }
 
-    requestAnimationFrame(this.animate.bind(this));
+    this.frameAnimationRequest = requestAnimationFrame(this.animate.bind(this))
     this.draw();
   }
 
@@ -71,6 +84,6 @@ export default class Counter extends Component {
 
     return (
       <Text style={style}>{value.toFixed(digits)}</Text>
-    );
+  );
   }
 }
