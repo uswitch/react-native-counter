@@ -44,7 +44,7 @@ export default class Counter extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.end !== prevProps.end) {
-      this.resetAnimation()
+      this.draw()
     }
   }
 
